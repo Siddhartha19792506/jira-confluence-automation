@@ -26,3 +26,8 @@ htmlcov/
 # IDE settings
 .vscode/
 .idea/
+
+# Project scaffolding / local notes
+notes.md
+work/module03-task/main.py
+work/module03-task/README.md
