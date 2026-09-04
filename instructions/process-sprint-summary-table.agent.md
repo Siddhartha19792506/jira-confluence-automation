@@ -1,0 +1,10 @@
+- Load normalized Jira issue data for the active sprint or specified sprint window.
+- Group issues by status, assignee, and priority.
+- Compute totals for each group and overall sprint counts.
+- Compute completion metrics: done ratio, in-progress ratio, blocked ratio.
+- Build a summary table with stable column order.
+- Include a blockers subsection listing issue key, owner, and age.
+- Include trend fields when previous sprint snapshot exists.
+- Validate that totals across groups reconcile with overall issue count.
+- Emit summary table in markdown and JSON formats.
+- Return warnings for missing sprint metadata or unmapped statuses.

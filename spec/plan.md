@@ -32,6 +32,7 @@ Tasks:
 - Add base migrations for workflow run metadata tables.
 - Implement baseline endpoints:
   - `GET /api/health`
+  - `GET /api/readiness`
   - placeholder routes for Jira fetch, summary generation, and Confluence update.
 - Add request validation middleware and centralized error handler.
 
@@ -39,7 +40,8 @@ Milestones:
 - M1.1: Backend server boots locally.
 - M1.2: DB migrations apply successfully.
 - M1.3: Health endpoint returns 200.
-- M1.4: API skeleton routes reachable with structured responses.
+- M1.4: Readiness endpoint returns 200 when dependencies are available.
+- M1.5: API skeleton routes reachable with structured responses.
 
 Exit Criteria:
 - Backend and DB start reliably in local environment.
@@ -122,14 +124,22 @@ Exit Criteria:
 ## 5. Task-to-Acceptance Mapping
 | Task ID | Description | Acceptance Criteria |
 |---|---|---|
-| TASK-JCA-01 | Backend bootstrap + health endpoint | AC-1, AC-2 |
-| TASK-JCA-02 | Frontend skeleton + routing | AC-3, AC-9 |
-| TASK-JCA-03 | Jira fetch endpoint + normalization | AC-4 |
-| TASK-JCA-04 | Sprint summary endpoint | AC-5 |
-| TASK-JCA-05 | Confluence update endpoint (idempotent) | AC-6 |
-| TASK-JCA-06 | Run metadata persistence | AC-7 |
-| TASK-JCA-07 | Integration and E2E tests | AC-8 |
-| TASK-JCA-08 | Traceability + spec-linked commits | AC-10 |
+| TASK-JCA-01 | Backend service bootstrap | AC-1 |
+| TASK-JCA-02 | PostgreSQL container and connection wiring | AC-1 |
+| TASK-JCA-03 | Migration baseline | AC-1 |
+| TASK-JCA-04 | API skeleton and middleware (health/readiness) | AC-2 |
+| TASK-JCA-05 | React 18 + Vite app skeleton | AC-3 |
+| TASK-JCA-06 | Routing setup | AC-3 |
+| TASK-JCA-07 | Frontend API service layer | AC-9 |
+| TASK-JCA-08 | UI state components | AC-9 |
+| TASK-JCA-09 | Jira fetch endpoint + normalization | AC-4 |
+| TASK-JCA-10 | Sprint summary endpoint | AC-5 |
+| TASK-JCA-11 | Confluence update endpoint (idempotent) | AC-6 |
+| TASK-JCA-12 | Workflow metadata persistence | AC-7 |
+| TASK-JCA-13 | Backend unit and integration tests | AC-8 |
+| TASK-JCA-14 | Frontend integration tests | AC-9 |
+| TASK-JCA-15 | End-to-end workflow test | AC-8 |
+| TASK-JCA-16 | Traceability and delivery closure | AC-10 |
 
 ## 6. Risks and Mitigations
 - Risk: External Jira/Confluence API instability may block feature verification.

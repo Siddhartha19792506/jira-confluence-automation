@@ -1,0 +1,11 @@
+- Use this instruction when the user needs to verify Jira and Confluence service-account access scopes before integration work.
+- Use this instruction for setup checks tied to backlog item: confirm Jira and Confluence access scopes.
+- Run the tool from project root: python tools/Jira_Confluence_acces.py --jira-url <url> --confluence-url <url> --token <token>.
+- Include --email <email> when using Atlassian Basic auth.
+- Include --project-key <key> to validate Jira project access.
+- Include --space-key <key> to validate Confluence space access.
+- If values are already configured, allow env var fallback: JIRA_BASE_URL, CONFLUENCE_BASE_URL, ATLASSIAN_EMAIL, ATLASSIAN_API_TOKEN, JIRA_PROJECT_KEY, CONFLUENCE_SPACE_KEY.
+- Treat PASS for Jira auth, Jira permissions, and Confluence auth as minimum success criteria.
+- Report each check line exactly as PASS or FAIL with details from tool output.
+- Return summary as passed checks over total checks and clearly state overall status.
+- On failures, include the failing scope and the next corrective action needed.

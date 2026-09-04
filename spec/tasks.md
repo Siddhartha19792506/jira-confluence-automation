@@ -45,10 +45,12 @@
 - Dependencies: TASK-JCA-01.
 - Deliverables:
   - `GET /api/health`
+  - `GET /api/readiness`
   - Placeholder routes for Jira fetch, summary generation, Confluence update.
   - Validation and error middleware.
 - Acceptance Criteria:
   - `GET /api/health` returns HTTP 200 with `{ "status": "ok" }`.
+  - `GET /api/readiness` returns HTTP 200 with `{ "status": "ready" }` when dependencies are available.
   - Invalid request payloads return structured 4xx responses.
   - Unexpected errors return structured 5xx responses without secrets.
 
@@ -180,11 +182,11 @@
 ## Acceptance Criteria Coverage Map
 - AC-1: TASK-JCA-01, TASK-JCA-02, TASK-JCA-04
 - AC-2: TASK-JCA-04
-- AC-3: TASK-JCA-06
+- AC-3: TASK-JCA-05, TASK-JCA-06
 - AC-4: TASK-JCA-09
 - AC-5: TASK-JCA-10
 - AC-6: TASK-JCA-11
 - AC-7: TASK-JCA-12
 - AC-8: TASK-JCA-13, TASK-JCA-15
-- AC-9: TASK-JCA-08, TASK-JCA-14
+- AC-9: TASK-JCA-07, TASK-JCA-08, TASK-JCA-14
 - AC-10: TASK-JCA-16

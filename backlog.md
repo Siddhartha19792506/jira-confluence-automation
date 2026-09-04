@@ -34,3 +34,10 @@
 - [ ] Document execution flow for generating status and updating Confluence.
 - [ ] Add troubleshooting notes for auth errors, pagination issues, and update conflicts.
 - [ ] Perform final quality check: implementation complete, tests passing, and docs updated.
+
+## Phase 6: Batch Operations and Script Automation
+- [ ] Implement walkthrough validator script to scan all modules/**/walkthrough.md files for required sections (Overview, Steps, Summary, Quiz).
+- [ ] Implement batch report generator script to create/update module completion reports under work/ for all modules in one run.
+- [ ] Implement GitHub issue sync script to bulk create/update issues from backlog tasks and attach labels by phase.
+- [ ] Implement backlog linker script to automatically append/update issue numbers next to matching backlog tasks.
+- [ ] Implement bulk issue operations script for repeated actions (add comment, add label, close/reopen) across multiple issue IDs.

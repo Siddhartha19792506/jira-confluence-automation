@@ -1,0 +1,10 @@
+- Read Jira base URL, auth token, project key, and date window from environment variables.
+- Validate required inputs before sending API requests.
+- Build JQL for project and date filters with pagination support.
+- Call Jira search API and iterate pages until all matching issues are collected.
+- Normalize issue fields into a stable schema: key, summary, status, assignee, priority, sprint, updated, blocker flag.
+- Handle rate limits with retry and exponential backoff.
+- Handle auth and network failures with explicit error messages and non-zero exit behavior.
+- Produce deterministic output in JSON and a human-readable markdown summary.
+- Sort output by status and priority for consistent downstream reporting.
+- Save raw response snapshots and normalized output separately for traceability.

@@ -43,6 +43,9 @@ Provide an end-to-end workflow that:
 ### 4.1 Backend Endpoints (Express)
 - `GET /api/health`
   - 200 response: `{ "status": "ok" }`
+- `GET /api/readiness`
+  - 200 response: `{ "status": "ready" }` when dependencies are available
+  - 503 response: `{ "status": "not_ready" }` when dependencies are unavailable
 - `POST /api/jira/fetch`
   - Request: `{ "projectKey": "string", "sprintId": "string|number" }`
   - 200 response: normalized issue collection
@@ -113,7 +116,7 @@ Provide an end-to-end workflow that:
 
 ## 9. Acceptance Criteria
 - AC-1: Local stack starts successfully with backend, frontend, and PostgreSQL services.
-- AC-2: `GET /api/health` returns HTTP 200 and `{ "status": "ok" }`.
+- AC-2: `GET /api/health` returns HTTP 200 with `{ "status": "ok" }`, and `GET /api/readiness` returns HTTP 200 with `{ "status": "ready" }` when dependencies are available.
 - AC-3: Frontend routes (`/`, `/run`, `/history`) render successfully.
 - AC-4: Jira fetch endpoint validates input and returns normalized output.
 - AC-5: Sprint summary endpoint returns structured summary output.
@@ -137,16 +140,24 @@ Provide an end-to-end workflow that:
 ## 11. Traceability Matrix
 | Spec Item | Task ID | PR | Test Case |
 |---|---|---|---|
-| FR-1 | TASK-JCA-01 | Pending | TEST-API-HEALTH |
-| FR-2 | TASK-JCA-02 | Pending | TEST-JIRA-FETCH |
-| FR-3 | TASK-JCA-03 | Pending | TEST-JIRA-NORMALIZE |
-| FR-4 | TASK-JCA-04 | Pending | TEST-SUMMARY-GENERATION |
-| FR-5 | TASK-JCA-05 | Pending | TEST-CONFLUENCE-IDEMPOTENT |
+| FR-1 | TASK-JCA-04 | Pending | TEST-API-HEALTH, TEST-API-READINESS |
+| FR-2 | TASK-JCA-09 | Pending | TEST-JIRA-FETCH |
+| FR-3 | TASK-JCA-09 | Pending | TEST-JIRA-NORMALIZE |
+| FR-4 | TASK-JCA-10 | Pending | TEST-SUMMARY-GENERATION |
+| FR-5 | TASK-JCA-11 | Pending | TEST-CONFLUENCE-IDEMPOTENT |
 | FR-6 | TASK-JCA-06 | Pending | TEST-FE-ROUTES |
-| FR-7 | TASK-JCA-07 | Pending | TEST-FE-STATE-HANDLING |
-| FR-8 | TASK-JCA-08 | Pending | TEST-DB-RUN-METADATA |
-| AC-1 | TASK-JCA-01 | Pending | TEST-STACK-BOOT |
-| AC-8 | TASK-JCA-09 | Pending | TEST-E2E-WORKFLOW |
+| FR-7 | TASK-JCA-08 | Pending | TEST-FE-STATE-HANDLING |
+| FR-8 | TASK-JCA-12 | Pending | TEST-DB-RUN-METADATA |
+| AC-1 | TASK-JCA-01, TASK-JCA-02, TASK-JCA-04 | Pending | TEST-STACK-BOOT |
+| AC-2 | TASK-JCA-04 | Pending | TEST-API-HEALTH, TEST-API-READINESS |
+| AC-3 | TASK-JCA-05, TASK-JCA-06 | Pending | TEST-FE-ROUTES |
+| AC-4 | TASK-JCA-09 | Pending | TEST-JIRA-FETCH |
+| AC-5 | TASK-JCA-10 | Pending | TEST-SUMMARY-GENERATION |
+| AC-6 | TASK-JCA-11 | Pending | TEST-CONFLUENCE-IDEMPOTENT |
+| AC-7 | TASK-JCA-12 | Pending | TEST-DB-RUN-METADATA |
+| AC-8 | TASK-JCA-13, TASK-JCA-15 | Pending | TEST-BE-INTEGRATION, TEST-E2E-WORKFLOW |
+| AC-9 | TASK-JCA-07, TASK-JCA-08, TASK-JCA-14 | Pending | TEST-FE-STATE-HANDLING |
+| AC-10 | TASK-JCA-16 | Pending | TEST-TRACEABILITY-CHECKLIST |
 
 ## 12. Approvals
 - Engineering Owner: Pending assignment

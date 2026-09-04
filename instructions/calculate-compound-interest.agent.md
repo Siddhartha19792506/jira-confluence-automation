@@ -1,0 +1,10 @@
+- Use this instruction when the user asks to calculate compound interest for a principal, annual rate, compounding frequency, and time period.
+- Use this instruction when the user asks for final investment value and total interest earned.
+- Invoke the script from project root with: python tools/compound_interest.py <principal> <annual_rate_percent> <compounds_per_year> <years>.
+- Map user inputs to arguments in this order: principal, annual_rate_percent, compounds_per_year, years.
+- Ensure principal is non-negative, compounds_per_year is greater than zero, and years is non-negative before invocation.
+- If any required argument is missing, ask for the missing values before running the command.
+- If the script raises a validation error, surface the exact error and request corrected input.
+- Present results using the script output fields: Final Amount and Interest Earned.
+- Keep numeric results to two decimal places as printed by the tool.
+- In responses, include the input values used and the two output lines without reformatting their labels.

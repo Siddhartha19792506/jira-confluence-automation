@@ -1,0 +1,10 @@
+- Accept reporting intent and filter inputs: project, sprint, assignee, labels, status groups, and date window.
+- Validate each input and reject unsafe or malformed values.
+- Generate JQL templates for common reports: sprint progress, open blockers, recently completed, overdue, and unassigned.
+- Generate a parameterized variant and a resolved final query for each template.
+- Ensure date and status clauses are explicit to avoid ambiguous results.
+- Include ORDER BY clauses for deterministic issue ordering.
+- Escape special characters in user-provided values.
+- Return queries in a compact markdown list plus machine-readable JSON.
+- Add short usage hints for each query with expected output intent.
+- Add fallback query generation when optional filters are missing.

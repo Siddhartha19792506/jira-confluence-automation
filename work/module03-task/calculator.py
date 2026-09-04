@@ -1,10 +1,16 @@
-def add(a, b):
-    return a + b
+class Calculator:
+    @staticmethod
+    def add(a, b):
+        return a + b
 
+    @staticmethod
+    def subtract(a, b):
+        return a - b
 
-def subtract(a, b):
-    return a - b
+    @staticmethod
+    def multiply(a, b):
+        return a * b
 
-
-def multiply(a, b):
-    return a * b
+    @staticmethod
+    def divide(a, b):
+        return a / b

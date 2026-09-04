@@ -1,0 +1,10 @@
+- Read Confluence base URL, space key, page ID or title, and auth token from environment variables.
+- Validate destination page identity before updating content.
+- Load normalized project status data from the Jira processing output.
+- Render status into Confluence-safe markdown or storage format.
+- Include sections for accomplishments, blockers, and next actions when data is available.
+- Preserve required page metadata and versioning fields when submitting updates.
+- Use idempotent content markers to replace the previous report block only.
+- Prevent duplicate report insertion across repeated runs.
+- Handle auth, permission, and edit-conflict errors with explicit recovery guidance.
+- Return updated page URL, version number, and update timestamp.
