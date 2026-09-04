@@ -1,142 +1,154 @@
 # Feature Specification
 
 ## Metadata
-- Feature Name: Python Calculator Module and Demo Script
-- Spec ID: SPEC-CALC-001
+- Feature Name: Jira/Confluence Automation Web App MVP
+- Spec ID: SPEC-JCA-001
 - Author: Project Team
 - Date: 2026-09-04
-- Status: Draft
-- Related Issues: TBD
+- Status: In Review
+- Related Issues: backlog alignment pending
 
 ## 1. Project Overview
-Build a simple Python calculator module and a runnable demo script that performs core arithmetic operations. The module should provide a class-based API and the demo should print example operation results for quick validation.
+Build a web application for Jira/Confluence automation with a React 18 + Vite frontend, Node.js + Express backend, and PostgreSQL 15 via Docker. The MVP will enable fetching Jira data, generating sprint summaries, and updating Confluence status pages safely.
 
 ## 2. Problem and Outcome
 
 ### 2.1 Problem Statement
-There is no shared, reusable utility in the repository for basic arithmetic operations. Without a standard calculator component, repeated arithmetic logic may become inconsistent and harder to test.
+Project reporting is manual, slow, and error-prone due to repeated data gathering from Jira and manual status updates to Confluence.
 
 ### 2.2 Desired Outcome
-Provide a single `Calculator` class with clear methods for addition, subtraction, multiplication, and division, plus a demonstration entry script showing expected runtime behavior.
+Provide an end-to-end workflow that:
+- Retrieves and normalizes Jira issue/sprint data.
+- Generates project status summaries.
+- Publishes updates to Confluence with idempotent page updates.
 
 ### 2.3 Success Metrics
-- All calculator methods return correct values for representative numeric inputs.
-- Running the demo script completes successfully and prints valid results for all four operations.
-- Required files are committed and tracked in Git with clear commit history.
+- End-to-end status update workflow completes without manual data editing.
+- API endpoints respond with deterministic schemas and expected status codes.
+- MVP UI allows operators to trigger and view workflow results.
+- Core workflow passes unit and integration test gates.
 
 ## 3. Functional Requirements
-- FR-1: The system shall provide a class named `Calculator`.
-- FR-2: `Calculator` shall implement method `add(a, b)` that returns $a + b$.
-- FR-3: `Calculator` shall implement method `subtract(a, b)` that returns $a - b$.
-- FR-4: `Calculator` shall implement method `multiply(a, b)` that returns $a \times b$.
-- FR-5: `Calculator` shall implement method `divide(a, b)` that returns $a / b$ for valid non-zero divisor.
-- FR-6: A runnable script shall instantiate `Calculator`, execute each operation with sample inputs, and print output.
+- FR-1: System shall expose backend health and readiness endpoints.
+- FR-2: System shall expose API endpoints to fetch Jira issue/sprint data.
+- FR-3: System shall normalize Jira data into a reporting-friendly schema.
+- FR-4: System shall generate sprint/status summary payloads.
+- FR-5: System shall update a Confluence project status page idempotently.
+- FR-6: Frontend shall provide routes for dashboard, run workflow, and result history views.
+- FR-7: Frontend shall show loading, success, and error states for all API-driven views.
+- FR-8: System shall persist workflow execution metadata in PostgreSQL.
 
 ## 4. API Contracts
 
-### 4.1 Class and Method Contracts (Python)
-- Class: `Calculator`
-- Method: `add(a, b)`
-  - Inputs: numeric values `a`, `b`
-  - Output: numeric sum
-- Method: `subtract(a, b)`
-  - Inputs: numeric values `a`, `b`
-  - Output: numeric difference
-- Method: `multiply(a, b)`
-  - Inputs: numeric values `a`, `b`
-  - Output: numeric product
-- Method: `divide(a, b)`
-  - Inputs: numeric values `a`, `b`
-  - Output: numeric quotient when `b != 0`
-  - Error behavior: division-by-zero handling must be explicit and deterministic
+### 4.1 Backend Endpoints (Express)
+- `GET /api/health`
+  - 200 response: `{ "status": "ok" }`
+- `POST /api/jira/fetch`
+  - Request: `{ "projectKey": "string", "sprintId": "string|number" }`
+  - 200 response: normalized issue collection
+  - 4xx/5xx: structured error `{ "code": "string", "message": "string" }`
+- `POST /api/reports/sprint-summary`
+  - Request: normalized Jira payload or reference id
+  - 200 response: summary artifact payload
+- `POST /api/confluence/update-status`
+  - Request: `{ "pageId": "string", "content": "object", "idempotencyKey": "string" }`
+  - 200 response: `{ "updated": true|false, "version": number }`
 
-### 4.2 Runtime Demonstration Contract
-- Entry script path: `work/module03-task/main.py`
-- Module path: `work/module03-task/calculator.py`
-- Behavior: print readable outputs for add/subtract/multiply/divide example calls
+### 4.2 External Integration Rules
+- Jira and Confluence API clients must define timeout and retry behavior.
+- Authentication must use environment variables only.
+- Error responses must not leak sensitive credentials.
 
-## 5. Data Requirements
-- Persistent data storage is not required.
-- No database or migration changes are required.
-- All computation is in-memory and stateless.
+## 5. Data Requirements (PostgreSQL 15)
+- Persist run metadata: run id, timestamps, source parameters, status, and error summary.
+- Persist summary artifact metadata for auditability.
+- All schema changes must be versioned migrations.
+- Indexes required on run timestamp and run status.
 
 ## 6. Technical Requirements
 
-### 6.1 Language and Runtime
-- Python 3.x is required.
-- Implementation must remain compatible with common Python 3 runtimes.
+### 6.1 Frontend (React 18 + Vite)
+- Route structure:
+  - `/` dashboard
+  - `/run` workflow execution
+  - `/history` prior runs
+- API service layer must be separated from presentational components.
+- UI must provide clear empty/loading/error/success states.
 
-### 6.2 Code Organization
-- Core arithmetic logic must live in `work/module03-task/calculator.py`.
-- Demo entry logic must live in `work/module03-task/main.py`.
-- The `Calculator` API should be simple, readable, and test-friendly.
+### 6.2 Backend (Node.js + Express)
+- Route layer delegates business logic to service modules.
+- Input validation required for all POST endpoints.
+- Logging required for workflow start, completion, and failure.
 
-### 6.3 Error Handling
-- Division by zero behavior must be clearly defined (raise a standard exception or provide documented handling).
-- Any exception behavior should be consistent and predictable.
+### 6.3 Database and Docker
+- PostgreSQL 15 required in local Docker Compose setup.
+- Migration scripts required for schema initialization and updates.
+- Backend must fail fast with clear error if DB connection is unavailable.
 
-### 6.4 Version Control
-- Project files and updates must be tracked in Git.
-- Commits should include clear messages indicating requirement coverage.
+### 6.4 Non-Functional Requirements
+- Reliability: workflow retries transient integration errors.
+- Performance: summary generation should complete within acceptable local dev latency (target under 10 seconds for typical sprint payload sizes).
+- Security: secrets must come from environment variables and never be committed.
+- Observability: each workflow run must be traceable via run id.
 
-## 7. Scope
+## 7. Delivery Phases
+- Phase 1: Backend setup (database, API skeleton).
+- Phase 2: Frontend setup (UI skeleton, routing).
+- Phase 3: Feature implementation (one feature at a time).
+- Phase 4: Integration and testing.
 
-### 7.1 In Scope
-- Four arithmetic operations: add, subtract, multiply, divide.
-- Class-based API via `Calculator`.
-- Command-line demonstration through printed output.
+## 8. Scope
 
-### 7.2 Out of Scope
-- GUI implementation.
-- Web API or service endpoints.
-- Persistent storage or database integration.
-- Advanced mathematical operations (powers, roots, trigonometry, etc.).
+### 8.1 In Scope
+- Backend API skeleton and database foundation.
+- Frontend shell with routing and API wiring points.
+- Incremental implementation of Jira fetch, summary generation, and Confluence update.
+- Integration and verification for MVP workflow.
 
-## 8. Risks and Assumptions
-- Assumption A1: Users will run the demo using a valid Python 3 environment.
-- Assumption A2: Numeric inputs are provided in compatible Python numeric types.
-- Risk R1: Undefined division-by-zero behavior may cause inconsistent outcomes.
-- Mitigation M1: Define and test explicit division-by-zero behavior.
-- Risk R2: Missing or unclear demo output may make validation ambiguous.
-- Mitigation M2: Print labeled results for each operation.
+### 8.2 Out of Scope
+- Advanced analytics and predictive reporting.
+- Multi-tenant role management and SSO enhancements.
+- Full production hardening and autoscaling configuration.
+- Mobile-native applications.
 
 ## 9. Acceptance Criteria
-- AC-1: `Calculator.add(a, b)` returns the correct sum for representative test inputs.
-- AC-2: `Calculator.subtract(a, b)` returns the correct difference for representative test inputs.
-- AC-3: `Calculator.multiply(a, b)` returns the correct product for representative test inputs.
-- AC-4: `Calculator.divide(a, b)` returns the correct quotient for non-zero divisors.
-- AC-5: Division by zero follows documented behavior.
-- AC-6: Running `work/module03-task/main.py` prints valid arithmetic results.
-- AC-7: Relevant project files are committed to Git with clear commit messages.
+- AC-1: Local stack starts successfully with backend, frontend, and PostgreSQL services.
+- AC-2: `GET /api/health` returns HTTP 200 and `{ "status": "ok" }`.
+- AC-3: Frontend routes (`/`, `/run`, `/history`) render successfully.
+- AC-4: Jira fetch endpoint validates input and returns normalized output.
+- AC-5: Sprint summary endpoint returns structured summary output.
+- AC-6: Confluence update endpoint performs idempotent update behavior.
+- AC-7: Workflow run metadata is persisted in PostgreSQL.
+- AC-8: Integration tests cover backend endpoints and critical workflow path.
+- AC-9: UI displays loading and error states for workflow execution.
+- AC-10: Spec-linked commits and traceability records are maintained.
 
 ## 10. Verification Plan
-- Unit checks:
-  - Validate each method with positive, negative, and decimal values.
-  - Validate division-by-zero behavior.
-- Script validation:
-  - Run `work/module03-task/main.py` and verify printed outputs for all operations.
-- Repository validation:
-  - Confirm required files are tracked in Git.
-  - Confirm commit messages map to completed work.
+- Backend checks:
+  - Validate endpoint schemas, status codes, and input validation behavior.
+  - Validate DB writes for workflow runs.
+- Frontend checks:
+  - Validate route rendering and API state handling.
+- Integration checks:
+  - Execute one end-to-end workflow from Jira fetch to Confluence update.
+- Quality checks:
+  - Run lint and tests before merge.
 
 ## 11. Traceability Matrix
 | Spec Item | Task ID | PR | Test Case |
 |---|---|---|---|
-| FR-1 | TASK-CALC-01 | TBD | TEST-CALC-CLASS-EXISTS |
-| FR-2 | TASK-CALC-02 | TBD | TEST-CALC-ADD |
-| FR-3 | TASK-CALC-03 | TBD | TEST-CALC-SUBTRACT |
-| FR-4 | TASK-CALC-04 | TBD | TEST-CALC-MULTIPLY |
-| FR-5 | TASK-CALC-05 | TBD | TEST-CALC-DIVIDE |
-| FR-6 | TASK-CALC-06 | TBD | TEST-DEMO-OUTPUT |
-| AC-1 | TASK-CALC-02 | TBD | TEST-CALC-ADD |
-| AC-2 | TASK-CALC-03 | TBD | TEST-CALC-SUBTRACT |
-| AC-3 | TASK-CALC-04 | TBD | TEST-CALC-MULTIPLY |
-| AC-4 | TASK-CALC-05 | TBD | TEST-CALC-DIVIDE |
-| AC-5 | TASK-CALC-05 | TBD | TEST-CALC-DIVIDE-BY-ZERO |
-| AC-6 | TASK-CALC-06 | TBD | TEST-DEMO-OUTPUT |
-| AC-7 | TASK-CALC-07 | TBD | TEST-GIT-TRACKING |
+| FR-1 | TASK-JCA-01 | Pending | TEST-API-HEALTH |
+| FR-2 | TASK-JCA-02 | Pending | TEST-JIRA-FETCH |
+| FR-3 | TASK-JCA-03 | Pending | TEST-JIRA-NORMALIZE |
+| FR-4 | TASK-JCA-04 | Pending | TEST-SUMMARY-GENERATION |
+| FR-5 | TASK-JCA-05 | Pending | TEST-CONFLUENCE-IDEMPOTENT |
+| FR-6 | TASK-JCA-06 | Pending | TEST-FE-ROUTES |
+| FR-7 | TASK-JCA-07 | Pending | TEST-FE-STATE-HANDLING |
+| FR-8 | TASK-JCA-08 | Pending | TEST-DB-RUN-METADATA |
+| AC-1 | TASK-JCA-01 | Pending | TEST-STACK-BOOT |
+| AC-8 | TASK-JCA-09 | Pending | TEST-E2E-WORKFLOW |
 
 ## 12. Approvals
-- Engineering Owner: TBD
-- Reviewer: TBD
-- Approval Date: TBD
+- Engineering Owner: Pending assignment
+- Reviewer: Pending assignment
+- Approval Date: Pending
